@@ -20,19 +20,19 @@
         <class>com.example.gymmanagement.entities.TrainerSchedule</class>
 
         <properties>
-            <!-- Ρυθμίσεις Hibernate -->
+
             <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
 
-            <!-- ΑΛΛΑΓΗ 3: JDBC Properties (Διαβάζουν τις μεταβλητές του Railway) -->
+
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
 
-            <!-- Στο Railway Variables βάλε: DB_URL, DB_USER, DB_PASSWORD -->
+
             <property name="jakarta.persistence.jdbc.url" value="${DB_URL}"/>
             <property name="jakarta.persistence.jdbc.user" value="${DB_USER}"/>
             <property name="jakarta.persistence.jdbc.password" value="${DB_PASSWORD}"/>
 
-            <!-- Logs -->
+
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
