@@ -17,24 +17,19 @@
         <class>com.example.gymmanagement.entities.TrainerSchedule</class>
 
         <properties>
+            <!-- JDBC Connection -->
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="${DB_URL}"/>
             <property name="jakarta.persistence.jdbc.user" value="${DB_USER}"/>
             <property name="jakarta.persistence.jdbc.password" value="${DB_PASSWORD}"/>
 
+            <!-- Hibernate Settings -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
 
+            <!-- Update database schema automatically -->
             <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
-
-            <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
-            <property name="hibernate.hikari.minimumIdle" value="0"/>
-            <property name="hibernate.hikari.maximumPoolSize" value="1"/>
-            <property name="hibernate.hikari.idleTimeout" value="30000"/>
-
-            <property name="hibernate.connection.ssl" value="true"/>
-            <property name="hibernate.connection.sslmode" value="require"/>
         </properties>
     </persistence-unit>
 </persistence>

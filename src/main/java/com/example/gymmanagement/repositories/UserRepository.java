@@ -9,15 +9,11 @@ import java.util.List;
 @ApplicationScoped
 public class UserRepository {
 
-    // Χρησιμοποιούμε το Factory για να φτιάχνουμε EntityManager που μπορούμε να ελέγξουμε
     @PersistenceUnit(unitName = "GymPU")
     private EntityManagerFactory emf;
 
-    // Κρατάμε και αυτόν για τα απλά reads (selects)
     @PersistenceContext(unitName = "GymPU")
     private EntityManager emRead;
-
-    // --- ΜΕΘΟΔΟΙ ΕΓΓΡΑΦΗΣ (Χρειάζονται Manual Transaction) ---
 
     public User createUser(User user) {
         EntityManager em = emf.createEntityManager();
@@ -35,9 +31,12 @@ public class UserRepository {
         }
     }
 
-    // Η μέθοδος save που καλείται πιθανόν από το UserService
     public void save(User user) {
-        createUser(user);
+        if (user.getId() == null) {
+            createUser(user);
+        } else {
+            updateUser(user);
+        }
     }
 
     public User updateUser(User user) {
@@ -74,8 +73,6 @@ public class UserRepository {
         }
     }
 
-    // --- ΜΕΘΟΔΟΙ ΑΝΑΓΝΩΣΗΣ (Reads - Δουλεύουν και με τον default emRead) ---
-
     public List<User> findAllTrainers(boolean includeInactive) {
         String queryString = "SELECT u FROM User u WHERE u.role = :role";
         if (!includeInactive) {
@@ -86,13 +83,8 @@ public class UserRepository {
         return query.getResultList();
     }
 
-    public User findById(Long id) {
-        return emRead.find(User.class, id);
-    }
-
-    public List<User> findAll() {
-        return emRead.createQuery("SELECT u FROM User u", User.class).getResultList();
-    }
+    public User findById(Long id) { return emRead.find(User.class, id); }
+    public List<User> findAll() { return emRead.createQuery("SELECT u FROM User u", User.class).getResultList(); }
 
     public User findByUsername(String username) {
         try {
