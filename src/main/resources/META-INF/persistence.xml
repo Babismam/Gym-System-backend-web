@@ -5,10 +5,7 @@
                                  https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
              version="3.1">
 
-    <!-- ΑΛΛΑΓΗ 1: transaction-type="RESOURCE_LOCAL" (Απαραίτητο για Docker/Railway) -->
     <persistence-unit name="GymPU" transaction-type="RESOURCE_LOCAL">
-
-        <!-- ΑΛΛΑΓΗ 2: Ο Provider πρέπει να μπει ΠΡΙΝ από τα classes -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <class>com.example.gymmanagement.entities.User</class>
@@ -20,21 +17,24 @@
         <class>com.example.gymmanagement.entities.TrainerSchedule</class>
 
         <properties>
-
-            <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-
-
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-
-
             <property name="jakarta.persistence.jdbc.url" value="${DB_URL}"/>
             <property name="jakarta.persistence.jdbc.user" value="${DB_USER}"/>
             <property name="jakarta.persistence.jdbc.password" value="${DB_PASSWORD}"/>
 
-
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+
+            <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
+
+            <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
+            <property name="hibernate.hikari.minimumIdle" value="2"/>
+            <property name="hibernate.hikari.maximumPoolSize" value="5"/>
+            <property name="hibernate.hikari.idleTimeout" value="30000"/>
+
+            <property name="hibernate.connection.ssl" value="true"/>
+            <property name="hibernate.connection.sslmode" value="require"/>
         </properties>
     </persistence-unit>
 </persistence>

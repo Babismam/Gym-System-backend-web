@@ -1,5 +1,6 @@
 package com.example.gymmanagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 public class RegisterDTO {
@@ -10,10 +11,17 @@ public class RegisterDTO {
     private String username;
     private String password;
     private String role;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
+
     private String membershipType;
-    private String membershipDuration; // e.g., "3-MONTH", "6-MONTH", "CUSTOM"
+    private String membershipDuration;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate customStartDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate customEndDate;
 
     public RegisterDTO() {}

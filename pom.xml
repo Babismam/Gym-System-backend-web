@@ -19,7 +19,6 @@
     </properties>
 
     <dependencies>
-        <!-- Jakarta EE API (Παρέχεται από τον Wildfly) -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -27,14 +26,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- PostgreSQL Driver (Μέσα στο WAR για να συνδέεται στο Supabase) -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
         </dependency>
 
-        <!-- Hibernate (Παρέχεται από τον Wildfly) -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -42,8 +39,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- ✅ JACKSON FIX: Αφαιρέθηκε το scope provided για να μπουν στο WAR -->
-        <!-- Αυτό διορθώνει το πρόβλημα με τις ημερομηνίες -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-hikaricp</artifactId>
+            <version>6.5.2.Final</version>
+        </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -56,7 +57,6 @@
             <version>2.17.0</version>
         </dependency>
 
-        <!-- JWT Dependencies -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -81,14 +81,12 @@
             </exclusions>
         </dependency>
 
-        <!-- BCrypt -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
 
-        <!-- Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
