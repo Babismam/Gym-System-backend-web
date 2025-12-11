@@ -19,7 +19,7 @@
     </properties>
 
     <dependencies>
-        <!-- Jakarta EE API -->
+        <!-- Jakarta EE API (Παρέχεται από τον Wildfly) -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -27,14 +27,14 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- PostgreSQL Driver (Χωρίς scope provided για να μπει στο WAR) -->
+        <!-- PostgreSQL Driver (Μέσα στο WAR για να συνδέεται στο Supabase) -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
         </dependency>
 
-        <!-- Hibernate Core -->
+        <!-- Hibernate (Παρέχεται από τον Wildfly) -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -42,18 +42,18 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Jackson -->
+        <!-- ✅ JACKSON FIX: Αφαιρέθηκε το scope provided για να μπουν στο WAR -->
+        <!-- Αυτό διορθώνει το πρόβλημα με τις ημερομηνίες -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.17.0</version>
-            <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.17.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- JWT Dependencies -->
