@@ -29,8 +29,8 @@
             <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
 
             <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
-            <property name="hibernate.hikari.minimumIdle" value="2"/>
-            <property name="hibernate.hikari.maximumPoolSize" value="5"/>
+            <property name="hibernate.hikari.minimumIdle" value="0"/>
+            <property name="hibernate.hikari.maximumPoolSize" value="1"/>
             <property name="hibernate.hikari.idleTimeout" value="30000"/>
 
             <property name="hibernate.connection.ssl" value="true"/>
