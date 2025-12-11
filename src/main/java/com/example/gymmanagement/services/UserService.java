@@ -9,7 +9,6 @@ import com.example.gymmanagement.repositories.AttendanceRepository;
 import com.example.gymmanagement.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
@@ -26,7 +25,6 @@ public class UserService {
     @Inject
     private AttendanceRepository attendanceRepository;
 
-    @Transactional
     public void setInitialMembershipFromDTO(User user, RegisterDTO dto) {
         String membershipType = dto.getMembershipType();
         String duration = dto.getMembershipDuration();
@@ -72,7 +70,6 @@ public class UserService {
         user.setMembershipStatus(MembershipStatus.ACTIVE);
     }
 
-    @Transactional
     public void changeMembership(User user, ChangeMembershipDTO dto) {
         String newMembershipType = dto.getMembershipType();
         String duration = dto.getMembershipDuration();
@@ -117,9 +114,9 @@ public class UserService {
         }
 
         user.setMembershipStatus(MembershipStatus.ACTIVE);
+        userRepository.updateUser(user);
     }
 
-    @Transactional
     public User pauseMembership(Long userId, int daysToPause, boolean isAdminAction) {
         User user = getUserById(userId);
         if (user == null || !user.isMember()) {
@@ -137,11 +134,9 @@ public class UserService {
         user.setMembershipEndDate(user.getMembershipEndDate().plusDays(daysToPause));
         user.setPausedByAdmin(isAdminAction);
 
-        userRepository.save(user);
-        return user;
+        return userRepository.updateUser(user);
     }
 
-    @Transactional
     public User resumeMembership(Long userId, boolean isAdminAction) {
         User user = getUserById(userId);
         if (user == null || !user.isMember()) {
@@ -158,11 +153,9 @@ public class UserService {
         user.setPauseEndDate(null);
         user.setPausedByAdmin(false);
 
-        userRepository.save(user);
-        return user;
+        return userRepository.updateUser(user);
     }
 
-    @Transactional
     public void deleteUser(Long id) {
         attendanceRepository.deleteByMemberId(id);
         userRepository.deleteById(id);
@@ -175,12 +168,11 @@ public class UserService {
     public List<User> getAllUsers() { return userRepository.findAll(); }
     public List<User> getAllMembers() { return userRepository.findAllMembers(); }
     public User getUserById(Long id) { return userRepository.findById(id); }
-    @Transactional
-    public User createUser(User user) { userRepository.save(user); return user; }
-    @Transactional
-    public User updateUser(User user) { userRepository.save(user); return user; }
+    public User createUser(User user) { return userRepository.createUser(user); }
+    public User updateUser(User user) { return userRepository.updateUser(user); }
     public long countMembers() { return userRepository.countByRole(UserRole.MEMBER); }
     public long countTrainers() { return userRepository.countByRole(UserRole.TRAINER); }
+
     public List<User> getUsersByRole(String roleString) {
         try {
             UserRole role = UserRole.valueOf(roleString.toUpperCase());

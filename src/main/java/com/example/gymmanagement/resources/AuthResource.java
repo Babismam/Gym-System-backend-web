@@ -8,7 +8,6 @@ import com.example.gymmanagement.repositories.UserRepository;
 import com.example.gymmanagement.services.UserService;
 import com.example.gymmanagement.utils.JwtUtil;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -20,7 +19,6 @@ import java.util.Map;
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Transactional
 public class AuthResource {
 
     @Inject
@@ -53,6 +51,7 @@ public class AuthResource {
         if (newUser.isMember()) {
             userService.setInitialMembershipFromDTO(newUser, dto);
         }
+
         userService.createUser(newUser);
 
         Map<String, Object> response = new HashMap<>();
