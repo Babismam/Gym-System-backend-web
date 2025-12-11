@@ -3,35 +3,100 @@ package com.example.gymmanagement.repositories;
 import com.example.gymmanagement.entities.User;
 import com.example.gymmanagement.entities.UserRole;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.*;
 import java.util.List;
 
 @ApplicationScoped
 public class UserRepository {
 
+    // Χρησιμοποιούμε το Factory για να φτιάχνουμε EntityManager που μπορούμε να ελέγξουμε
+    @PersistenceUnit(unitName = "GymPU")
+    private EntityManagerFactory emf;
+
+    // Κρατάμε και αυτόν για τα απλά reads (selects)
     @PersistenceContext(unitName = "GymPU")
-    private EntityManager em;
+    private EntityManager emRead;
+
+    // --- ΜΕΘΟΔΟΙ ΕΓΓΡΑΦΗΣ (Χρειάζονται Manual Transaction) ---
+
+    public User createUser(User user) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(user);
+            tx.commit();
+            return user;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    // Η μέθοδος save που καλείται πιθανόν από το UserService
+    public void save(User user) {
+        createUser(user);
+    }
+
+    public User updateUser(User user) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            User updated = em.merge(user);
+            tx.commit();
+            return updated;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void deleteById(Long id) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            User user = em.find(User.class, id);
+            if (user != null) {
+                em.remove(user);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    // --- ΜΕΘΟΔΟΙ ΑΝΑΓΝΩΣΗΣ (Reads - Δουλεύουν και με τον default emRead) ---
 
     public List<User> findAllTrainers(boolean includeInactive) {
         String queryString = "SELECT u FROM User u WHERE u.role = :role";
         if (!includeInactive) {
             queryString += " AND u.isActive = true";
         }
-        TypedQuery<User> query = em.createQuery(queryString, User.class);
+        TypedQuery<User> query = emRead.createQuery(queryString, User.class);
         query.setParameter("role", UserRole.TRAINER);
         return query.getResultList();
     }
 
-    public User findById(Long id) { return em.find(User.class, id); }
-    public List<User> findAll() { return em.createQuery("SELECT u FROM User u", User.class).getResultList(); }
+    public User findById(Long id) {
+        return emRead.find(User.class, id);
+    }
+
+    public List<User> findAll() {
+        return emRead.createQuery("SELECT u FROM User u", User.class).getResultList();
+    }
 
     public User findByUsername(String username) {
         try {
-            return em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+            return emRead.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
                     .setParameter("username", username)
                     .getSingleResult();
         } catch (NoResultException e) {
@@ -40,36 +105,19 @@ public class UserRepository {
     }
 
     public List<User> findAllMembers() {
-        return em.createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
+        return emRead.createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
                 .setParameter("role", UserRole.MEMBER)
                 .getResultList();
     }
 
-    @Transactional
-    public void save(User user) {
-        if (user.getId() == null) {
-            em.persist(user);
-        } else {
-            em.merge(user);
-        }
-    }
-
-    @Transactional
-    public void deleteById(Long id) {
-        User user = findById(id);
-        if (user != null) {
-            em.remove(user);
-        }
-    }
-
     public List<User> findByRole(UserRole role) {
-        return em.createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
+        return emRead.createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
                 .setParameter("role", role)
                 .getResultList();
     }
 
     public long countByRole(UserRole role) {
-        return em.createQuery("SELECT count(u) FROM User u WHERE u.role = :role", Long.class)
+        return emRead.createQuery("SELECT count(u) FROM User u WHERE u.role = :role", Long.class)
                 .setParameter("role", role)
                 .getSingleResult();
     }
