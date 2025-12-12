@@ -10,27 +10,28 @@ import java.io.IOException;
 public class CorsFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
 
+        // ΣΩΣΤΟ origin — ΧΩΡΙΣ slash!
+        response.setHeader("Access-Control-Allow-Origin", "https://gym-system-app-frontend.netlify.app");
+        response.setHeader("Vary", "Origin");
 
-        res.setHeader("Access-Control-Allow-Origin", "https://gym-system-app-frontend.netlify.app/");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Max-Age", "3600");
 
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-
-        res.setHeader("Access-Control-Allow-Credentials", "true");
-
-
-        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
-            res.setStatus(HttpServletResponse.SC_OK);
-        } else {
-
-            chain.doFilter(request, response);
+        // Αν είναι OPTIONS → ΤΕΡΜΑ, μην πάει παρακάτω
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
         }
+
+        // Αλλιώς συνεχίζει στο AuthenticationFilter και μετά στους πόρους
+        chain.doFilter(req, res);
     }
 }

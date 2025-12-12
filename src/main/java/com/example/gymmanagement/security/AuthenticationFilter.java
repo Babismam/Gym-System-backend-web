@@ -22,33 +22,40 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+
         String path = requestContext.getUriInfo().getPath();
         String method = requestContext.getMethod();
 
-
-        if (path.contains("/auth")) {
+        // === 1) ALLOW CORS PREFLIGHT ===
+        if ("OPTIONS".equalsIgnoreCase(method)) {
             return;
         }
 
-        if (path.contains("/swagger") || path.contains("/openapi")) {
+        // === 2) PUBLIC ENDPOINTS (NO AUTH) ===
+        if (path.startsWith("auth") ||
+                path.contains("swagger") ||
+                path.contains("openapi")) {
             return;
         }
 
-        if (method.equals("GET")) {
-            if (path.contains("/trainers") ||
-                    path.contains("/schedule") ||
-                    path.contains("/opening-hours") ||
-                    path.contains("/programs")) {
+        // === 3) PUBLIC GET RESOURCES ===
+        if ("GET".equalsIgnoreCase(method)) {
+            if (path.startsWith("trainers") ||
+                    path.startsWith("schedule") ||
+                    path.startsWith("opening-hours") ||
+                    path.startsWith("programs")) {
                 return;
             }
         }
 
+        // === 4) JWT AUTHENTICATION ===
 
         String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                    .entity("Missing or invalid Authorization header").build());
+                    .entity("Missing or invalid Authorization header")
+                    .build());
             return;
         }
 
@@ -61,7 +68,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                     .verifyWith(key)
                     .build()
                     .parseSignedClaims(token);
-
 
         } catch (Exception e) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
