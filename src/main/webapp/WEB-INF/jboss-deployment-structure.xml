@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jboss-deployment-structure>
     <deployment>
-        <!-- Κρατάμε ΜΟΝΟ τις εξαιρέσεις για να λύσουμε το θέμα με το LocalDate -->
         <exclusions>
             <module name="com.fasterxml.jackson.core.jackson-core" />
             <module name="com.fasterxml.jackson.core.jackson-annotations" />
@@ -9,8 +8,5 @@
             <module name="com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider" />
             <module name="org.jboss.resteasy.resteasy-jackson2-provider" />
         </exclusions>
-
-        <!-- ΑΦΑΙΡΕΣΑΜΕ ΤΕΛΕΙΩΣ ΤΑ DEPENDENCIES -->
-        <!-- Το Wildfly θα τα βρει μόνο του -->
     </deployment>
 </jboss-deployment-structure>
