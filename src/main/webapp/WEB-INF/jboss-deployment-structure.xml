@@ -11,7 +11,7 @@
         </exclusions>
 
         <dependencies>
-
+            <!-- ✅ ΔΙΟΡΘΩΣΗ: Αφαιρέθηκε το 'jakarta.api' που δεν υπήρχε -->
 
             <module name="jakarta.ws.rs.api" />
             <module name="jakarta.servlet.api" />
