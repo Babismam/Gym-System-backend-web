@@ -1,35 +1,33 @@
 package com.example.gymmanagement.config;
 
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.container.*;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
-// Αυτό το φίλτρο τρέχει σε ΚΑΘΕ αίτημα, πριν από οτιδήποτε άλλο
-@WebFilter("/*")
-public class CorsFilter implements Filter {
+@Provider
+@PreMatching // <--- ΠΟΛΥ ΣΗΜΑΝΤΙΚΟ ΓΙΑ ΝΑ ΜΗΝ ΤΡΩΣ 405
+public class CorsFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
-
-        // Επιτρέπουμε το Frontend
-        res.setHeader("Access-Control-Allow-Origin", "https://gym-system-app-frontend.netlify.app");
-        res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        res.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With");
-
-        // Αν είναι έλεγχος (OPTIONS), απαντάμε ΟΚ και σταματάμε εδώ
-        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
-            res.setStatus(HttpServletResponse.SC_OK);
+    public void filter(ContainerRequestContext request) throws IOException {
+        if (isPreflightRequest(request)) {
+            request.abortWith(Response.ok().build());
             return;
         }
+    }
 
-        // Συνεχίζουμε κανονικά
-        chain.doFilter(request, response);
+    @Override
+    public void filter(ContainerRequestContext request, ContainerResponseContext response) throws IOException {
+        if (request.getHeaderString("Origin") == null) return;
+        response.getHeaders().putSingle("Access-Control-Allow-Origin", "https://gym-system-app-frontend.netlify.app");
+        response.getHeaders().putSingle("Access-Control-Allow-Credentials", "true");
+        response.getHeaders().putSingle("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        response.getHeaders().putSingle("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With");
+    }
+
+    private boolean isPreflightRequest(ContainerRequestContext request) {
+        return request.getHeaderString("Origin") != null
+                && request.getMethod().equalsIgnoreCase("OPTIONS");
     }
 }
