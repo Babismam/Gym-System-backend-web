@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jboss-deployment-structure>
     <deployment>
+        <!-- Κρατάμε ΜΟΝΟ τις εξαιρέσεις για να λύσουμε το θέμα με το LocalDate -->
         <exclusions>
-            <!-- Μπλοκάρουμε το Jackson του Server για να χρησιμοποιήσουμε το δικό μας -->
             <module name="com.fasterxml.jackson.core.jackson-core" />
             <module name="com.fasterxml.jackson.core.jackson-annotations" />
             <module name="com.fasterxml.jackson.core.jackson-databind" />
@@ -10,12 +10,7 @@
             <module name="org.jboss.resteasy.resteasy-jackson2-provider" />
         </exclusions>
 
-        <dependencies>
-            <!-- ✅ ΔΙΟΡΘΩΣΗ: Αφαιρέθηκε το 'jakarta.api' που δεν υπήρχε -->
-
-            <module name="jakarta.ws.rs.api" />
-            <module name="jakarta.servlet.api" />
-            <module name="org.jboss.logging" />
-        </dependencies>
+        <!-- ΑΦΑΙΡΕΣΑΜΕ ΤΕΛΕΙΩΣ ΤΑ DEPENDENCIES -->
+        <!-- Το Wildfly θα τα βρει μόνο του -->
     </deployment>
 </jboss-deployment-structure>
