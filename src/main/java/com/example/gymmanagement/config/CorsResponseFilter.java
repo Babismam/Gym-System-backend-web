@@ -9,24 +9,12 @@ import jakarta.ws.rs.ext.Provider;
 public class CorsResponseFilter implements ContainerResponseFilter {
 
     @Override
-    public void filter(ContainerRequestContext requestContext,
-                       ContainerResponseContext responseContext) {
+    public void filter(ContainerRequestContext request,
+                       ContainerResponseContext response) {
 
-        responseContext.getHeaders().add(
-                "Access-Control-Allow-Origin",
-                "https://gym-system-app-frontend.netlify.app"
-        );
-        responseContext.getHeaders().add(
-                "Access-Control-Allow-Credentials",
-                "true"
-        );
-        responseContext.getHeaders().add(
-                "Access-Control-Allow-Headers",
-                "Authorization, Content-Type"
-        );
-        responseContext.getHeaders().add(
-                "Access-Control-Allow-Methods",
-                "GET, POST, PUT, DELETE, OPTIONS"
-        );
+        response.getHeaders().add("Access-Control-Allow-Origin", "https://gym-system-app-frontend.netlify.app");
+        response.getHeaders().add("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
+        response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.getHeaders().add("Access-Control-Allow-Credentials", "true");
     }
 }
