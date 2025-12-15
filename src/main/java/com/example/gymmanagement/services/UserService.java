@@ -28,8 +28,11 @@ public class UserService {
     public void setInitialMembershipFromDTO(User user, RegisterDTO dto) {
         String membershipType = dto.getMembershipType();
         String duration = dto.getMembershipDuration();
-        LocalDate customStart = dto.getCustomStartDate();
-        LocalDate customEnd = dto.getCustomEndDate();
+
+        LocalDate customStart = (dto.getCustomStartDate() != null && !dto.getCustomStartDate().isEmpty())
+                ? LocalDate.parse(dto.getCustomStartDate()) : null;
+        LocalDate customEnd = (dto.getCustomEndDate() != null && !dto.getCustomEndDate().isEmpty())
+                ? LocalDate.parse(dto.getCustomEndDate()) : null;
 
         if (membershipType == null || membershipType.isBlank()) {
             throw new BadRequestException("Ο τύπος συνδρομής είναι υποχρεωτικός.");
