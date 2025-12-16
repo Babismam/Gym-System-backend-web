@@ -12,6 +12,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDate; // ✅ Προσθήκη Import
 import java.util.List;
 
 @Path("/trainers")
@@ -71,7 +72,17 @@ public class TrainerResource {
         userToUpdate.setLastName(dto.getLastName());
         userToUpdate.setEmail(dto.getEmail());
         userToUpdate.setPhone(dto.getPhone());
-        userToUpdate.setDateOfBirth(dto.getDateOfBirth());
+
+        // ✅ ΔΙΟΡΘΩΣΗ: Μετατροπή String σε LocalDate
+        if (dto.getDateOfBirth() != null && !dto.getDateOfBirth().isEmpty()) {
+            try {
+                userToUpdate.setDateOfBirth(LocalDate.parse(dto.getDateOfBirth()));
+            } catch (Exception e) {
+                // Αν η ημερομηνία είναι σε λάθος μορφή, την αγνοούμε ή πετάμε error
+                // Εδώ απλά δεν την ανανεώνουμε για να μην κρασάρει
+            }
+        }
+
         userToUpdate.setIsActive(dto.getIsActive());
         userToUpdate.setBio(dto.getBio());
         userToUpdate.setSpecialties(dto.getSpecialties());

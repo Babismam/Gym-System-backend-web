@@ -15,6 +15,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -93,6 +94,7 @@ public class UserResource {
 
     @GET
     public List<User> getAllMembers() { return userService.getAllMembers(); }
+
     @GET
     @Path("/{id}")
     public Response getMemberById(@PathParam("id") Long id) {
@@ -102,16 +104,19 @@ public class UserResource {
         }
         return Response.ok(user).build();
     }
+
     @GET
     @Path("/{id}/attendance")
     public List<AttendanceDTO> getMemberAttendance(@PathParam("id") Long memberId) {
         return attendanceService.getAttendanceByMemberId(memberId);
     }
+
     @GET
     @Path("/{id}/programs")
     public List<MemberProgramDTO> getMemberPrograms(@PathParam("id") Long memberId) {
         return memberProgramService.getProgramsByMemberId(memberId);
     }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createMember(User user) {
@@ -119,6 +124,7 @@ public class UserResource {
         User createdUser = userService.createUser(user);
         return Response.status(Response.Status.CREATED).entity(createdUser).build();
     }
+
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -127,18 +133,44 @@ public class UserResource {
         if (userToUpdate == null || !userToUpdate.isMember()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
         userToUpdate.setFirstName(dto.getFirstName());
         userToUpdate.setLastName(dto.getLastName());
         userToUpdate.setEmail(dto.getEmail());
         userToUpdate.setPhone(dto.getPhone());
         userToUpdate.setMembershipType(dto.getMembershipType());
-        userToUpdate.setDateOfBirth(dto.getDateOfBirth());
-        userToUpdate.setMembershipStartDate(dto.getMembershipStartDate());
-        userToUpdate.setMembershipEndDate(dto.getMembershipEndDate());
+
+        // ✅ ΔΙΟΡΘΩΣΗ: Μετατροπή String (DTO) σε LocalDate (Entity)
+        if (dto.getDateOfBirth() != null && !dto.getDateOfBirth().isEmpty()) {
+            try {
+                userToUpdate.setDateOfBirth(LocalDate.parse(dto.getDateOfBirth()));
+            } catch (Exception e) {
+                // Ignore invalid date format or handle error
+            }
+        }
+
+        if (dto.getMembershipStartDate() != null && !dto.getMembershipStartDate().isEmpty()) {
+            try {
+                userToUpdate.setMembershipStartDate(LocalDate.parse(dto.getMembershipStartDate()));
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
+
+        if (dto.getMembershipEndDate() != null && !dto.getMembershipEndDate().isEmpty()) {
+            try {
+                userToUpdate.setMembershipEndDate(LocalDate.parse(dto.getMembershipEndDate()));
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
+
         userToUpdate.setIsActive(dto.getIsActive());
+
         User updatedUser = userService.updateUser(userToUpdate);
         return Response.ok(updatedUser).build();
     }
+
     @DELETE
     @Path("/{id}")
     public Response deleteMember(@PathParam("id") Long id) {
