@@ -1,7 +1,6 @@
 package com.example.gymmanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.time.LocalDate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateMemberDTO {
@@ -10,9 +9,9 @@ public class UpdateMemberDTO {
     private String email;
     private String phone;
     private String membershipType;
-    private LocalDate dateOfBirth;
-    private LocalDate membershipStartDate;
-    private LocalDate membershipEndDate;
+    private String dateOfBirth;
+    private String membershipStartDate;
+    private String membershipEndDate;
     private Boolean isActive;
 
     public String getFirstName() { return firstName; }
@@ -25,12 +24,12 @@ public class UpdateMemberDTO {
     public void setPhone(String phone) { this.phone = phone; }
     public String getMembershipType() { return membershipType; }
     public void setMembershipType(String membershipType) { this.membershipType = membershipType; }
-    public LocalDate getDateOfBirth() { return dateOfBirth; }
-    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
-    public LocalDate getMembershipStartDate() { return membershipStartDate; }
-    public void setMembershipStartDate(LocalDate membershipStartDate) { this.membershipStartDate = membershipStartDate; }
-    public LocalDate getMembershipEndDate() { return membershipEndDate; }
-    public void setMembershipEndDate(LocalDate membershipEndDate) { this.membershipEndDate = membershipEndDate; }
+    public String getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    public String getMembershipStartDate() { return membershipStartDate; }
+    public void setMembershipStartDate(String membershipStartDate) { this.membershipStartDate = membershipStartDate; }
+    public String getMembershipEndDate() { return membershipEndDate; }
+    public void setMembershipEndDate(String membershipEndDate) { this.membershipEndDate = membershipEndDate; }
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }

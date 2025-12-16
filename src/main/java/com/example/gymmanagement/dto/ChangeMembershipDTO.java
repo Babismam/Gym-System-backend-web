@@ -1,12 +1,10 @@
 package com.example.gymmanagement.dto;
 
-import java.time.LocalDate;
-
 public class ChangeMembershipDTO {
     private String membershipType;
     private String membershipDuration;
-    private LocalDate customStartDate;
-    private LocalDate customEndDate;
+    private String customStartDate;
+    private String customEndDate;
 
     public String getMembershipType() {
         return membershipType;
@@ -24,19 +22,19 @@ public class ChangeMembershipDTO {
         this.membershipDuration = membershipDuration;
     }
 
-    public LocalDate getCustomStartDate() {
+    public String getCustomStartDate() {
         return customStartDate;
     }
 
-    public void setCustomStartDate(LocalDate customStartDate) {
+    public void setCustomStartDate(String customStartDate) {
         this.customStartDate = customStartDate;
     }
 
-    public LocalDate getCustomEndDate() {
+    public String getCustomEndDate() {
         return customEndDate;
     }
 
-    public void setCustomEndDate(LocalDate customEndDate) {
+    public void setCustomEndDate(String customEndDate) {
         this.customEndDate = customEndDate;
     }
 }

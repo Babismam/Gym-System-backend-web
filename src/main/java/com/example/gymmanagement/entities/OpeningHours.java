@@ -15,11 +15,11 @@ public class OpeningHours {
     @Column(name = "day_of_week", nullable = false)
     private String dayOfWeek;
 
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     @Column(name = "open_time")
     private LocalTime openTime;
 
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     @Column(name = "close_time")
     private LocalTime closeTime;
 

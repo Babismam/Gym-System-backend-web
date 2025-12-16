@@ -1,7 +1,6 @@
 package com.example.gymmanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.time.LocalDate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateTrainerDTO {
@@ -9,7 +8,7 @@ public class UpdateTrainerDTO {
     private String lastName;
     private String email;
     private String phone;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     private Boolean isActive;
     private String bio;
     private String specialties;
@@ -22,8 +21,8 @@ public class UpdateTrainerDTO {
     public void setEmail(String email) { this.email = email; }
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
-    public LocalDate getDateOfBirth() { return dateOfBirth; }
-    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    public String getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth; }
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
     public String getBio() { return bio; }

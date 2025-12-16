@@ -29,7 +29,6 @@ public class UserService {
         String membershipType = dto.getMembershipType();
         String duration = dto.getMembershipDuration();
 
-        // Μετατροπή String -> LocalDate (Για να λυθεί το θέμα του Jackson)
         LocalDate customStart = (dto.getCustomStartDate() != null && !dto.getCustomStartDate().isEmpty())
                 ? LocalDate.parse(dto.getCustomStartDate()) : null;
         LocalDate customEnd = (dto.getCustomEndDate() != null && !dto.getCustomEndDate().isEmpty())
@@ -78,10 +77,10 @@ public class UserService {
         String newMembershipType = dto.getMembershipType();
         String duration = dto.getMembershipDuration();
 
-        // Προσοχή: Εδώ υποθέτουμε ότι το ChangeMembershipDTO έχει ακόμα LocalDate.
-        // Αν το αλλάξεις σε String, πρέπει να βάλεις LocalDate.parse() όπως πάνω.
-        LocalDate customStart = dto.getCustomStartDate();
-        LocalDate customEnd = dto.getCustomEndDate();
+        LocalDate customStart = (dto.getCustomStartDate() != null && !dto.getCustomStartDate().isEmpty())
+                ? LocalDate.parse(dto.getCustomStartDate()) : null;
+        LocalDate customEnd = (dto.getCustomEndDate() != null && !dto.getCustomEndDate().isEmpty())
+                ? LocalDate.parse(dto.getCustomEndDate()) : null;
 
         if (newMembershipType == null || newMembershipType.isBlank()) {
             throw new BadRequestException("Ο τύπος συνδρομής είναι υποχρεωτικός.");
@@ -121,8 +120,6 @@ public class UserService {
         }
 
         user.setMembershipStatus(MembershipStatus.ACTIVE);
-
-        // Χρήση της custom μεθόδου updateUser του Repository (Manual Transaction)
         userRepository.updateUser(user);
     }
 
