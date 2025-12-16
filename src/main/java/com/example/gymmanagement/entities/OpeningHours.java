@@ -1,8 +1,6 @@
 package com.example.gymmanagement.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import java.time.LocalTime;
 
 @Entity
 @Table(name = "opening_hours")
@@ -15,20 +13,18 @@ public class OpeningHours {
     @Column(name = "day_of_week", nullable = false)
     private String dayOfWeek;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     @Column(name = "open_time")
-    private LocalTime openTime;
+    private String openTime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     @Column(name = "close_time")
-    private LocalTime closeTime;
+    private String closeTime;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getDayOfWeek() { return dayOfWeek; }
     public void setDayOfWeek(String dayOfWeek) { this.dayOfWeek = dayOfWeek; }
-    public LocalTime getOpenTime() { return openTime; }
-    public void setOpenTime(LocalTime openTime) { this.openTime = openTime; }
-    public LocalTime getCloseTime() { return closeTime; }
-    public void setCloseTime(LocalTime closeTime) { this.closeTime = closeTime; }
+    public String getOpenTime() { return openTime; }
+    public void setOpenTime(String openTime) { this.openTime = openTime; }
+    public String getCloseTime() { return closeTime; }
+    public void setCloseTime(String closeTime) { this.closeTime = closeTime; }
 }
